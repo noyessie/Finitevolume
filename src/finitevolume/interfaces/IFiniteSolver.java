@@ -6,6 +6,8 @@
 package finitevolume.interfaces;
 
 import function.interfaces.IFunction;
+import mesh.nterfaces.IMesh;
+import point.interfaces.IPoint;
 
 /**
  *
@@ -13,8 +15,8 @@ import function.interfaces.IFunction;
  */
 public interface IFiniteSolver {
     
-    public double[] solve(IFunction f , double u0 , double u1 , double[] mesh );
+    public double[] solve(IFunction f , IPoint u0 , IPoint u1 , IMesh mesh );
     
-    public double[] solve(IFunction f , double u0 , double u1 , int pas );
+    public double[] solve(IFunction f , IPoint u0 , IPoint u1 , int point );
     
 }

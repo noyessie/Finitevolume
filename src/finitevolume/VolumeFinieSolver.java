@@ -6,21 +6,25 @@
 package finitevolume;
 
 import function.interfaces.IFunction;
+import mesh.nterfaces.IMesh;
+import point.interfaces.IPoint;
 
 /**
  *
  * @author hubert
  */
-public class EVF extends AbstractFiniteSolver{
+public class VolumeFinieSolver extends AbstractFiniteSolver{
 
     @Override
-    public double[] solve(IFunction f, double u0, double u1, double[] mesh) {
+    public double[] solve(IFunction f, IPoint u0, IPoint u1, IMesh mesh) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public double[] solve(IFunction f, double u0, double u1, int pas) {
+    public double[] solve(IFunction f, IPoint u0, IPoint u1, int point) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
     
 }

@@ -35,6 +35,7 @@ public class DefaultFunction extends AbstractFunction{
     @Override
     public double valueOf(double point) {
         evaluator.putVariable(varName, point+"");
+
         try {
             return Double.valueOf(evaluator.evaluate(formatedExpression));
         } catch (EvaluationException ex) {

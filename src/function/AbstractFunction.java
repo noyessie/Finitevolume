@@ -13,7 +13,7 @@ import function.interfaces.IFunction;
  */
 public abstract class AbstractFunction implements IFunction{
     public double[] valueOf(double[] point){
-        double[] result = point;
+        double[] result = new double[point.length];
         for(int i=0 ; i<point.length ; i++){
             result[i] = this.valueOf(point[i]);
         }

@@ -5,17 +5,29 @@
  */
 package matrice.solver;
 
+import Jama.Matrix;
 import matrice.interfaces.IMatrice;
 
 /**
  *
- * @author hubert
+ * @author Abdel Aziz NGOUH
  */
 public class TriDiagMatriceSolver extends AbstractMatriceSolver{
+    
+    IMatrice A;
+    double[] solt, B;
+    Matrix matriceA, matriceB, Solution;
 
     @Override
     public double[] solve(IMatrice mat, double[] b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.A = mat;
+        this.B = b;
+        matriceA = new Matrix(A.getMatrice());
+        matriceB = new Matrix(B, B.length);
+        Solution = matriceA.solve(matriceB);
+        solt = Solution.getColumnPackedCopy();
+        return solt;
     }
     
 }
