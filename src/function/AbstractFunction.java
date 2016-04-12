@@ -6,6 +6,7 @@
 package function;
 
 import function.interfaces.IFunction;
+import point.interfaces.IPoint;
 
 /**
  *
@@ -19,4 +20,18 @@ public abstract class AbstractFunction implements IFunction{
         }
         return result;
     }
+    public double[] valueOf(IPoint[] point){
+        double[] result = new double[point.length];
+        for(int i=0 ; i<point.length ; i++){
+            result[i] = this.valueOf(point[i]);
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractFunction{" + '}';
+    }
+    
+    
 }

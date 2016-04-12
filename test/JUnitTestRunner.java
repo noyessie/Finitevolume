@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-import finitevolume.EDFTest;
+
 import matrice.solver.DefaultMatriceSolverTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -16,7 +16,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    EDFTest.class
+    
 })
 public class JUnitTestRunner {
 

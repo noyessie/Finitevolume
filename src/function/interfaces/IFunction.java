@@ -5,6 +5,8 @@
  */
 package function.interfaces;
 
+import point.interfaces.IPoint;
+
 /**
  *
  * @author hubert
@@ -12,6 +14,13 @@ package function.interfaces;
 public interface IFunction {
     
     public double valueOf(double point);
-    public double[] valueOf(double[] point);
+    
+    public double[] valueOf(double[] poont);
+    
+    public double valueOf(IPoint point);
+    
+    public double[] valueOf(IPoint[] point);
+    
+    
     
 }

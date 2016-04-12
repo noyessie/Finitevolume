@@ -13,7 +13,14 @@ public class InfiniteError extends AbstractError{
 
     @Override
     public double erreur(double[] solutionReel, double[] solutionApproche) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        double erreur = 0;
+        if(solutionApproche.length == solutionApproche.length){
+            for(int i=0 ; i<solutionApproche.length ; i++){
+                double err = Math.abs(solutionApproche[i]-solutionReel[i]);
+                erreur = err > erreur ? err : erreur;
+            }
+        }
+        return erreur;
     }
     
 }

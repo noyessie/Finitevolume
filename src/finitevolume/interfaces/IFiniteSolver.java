@@ -18,5 +18,4 @@ public interface IFiniteSolver {
     public double[] solve(IFunction f , IPoint u0 , IPoint u1 , IMesh mesh );
     
     public double[] solve(IFunction f , IPoint u0 , IPoint u1 , int point );
-    
 }

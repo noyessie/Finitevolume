@@ -30,4 +30,8 @@ public class TriDiagMatriceSolver extends AbstractMatriceSolver{
         return solt;
     }
     
+    public double con(){
+        return 0.0;
+    }
+    
 }
