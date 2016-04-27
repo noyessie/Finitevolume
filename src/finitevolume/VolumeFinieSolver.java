@@ -19,6 +19,9 @@ import point.interfaces.IPoint;
 import utilities.Utilities;
 import static utilities.Utilities.printMatrice;
 
+import Jama.Matrix;
+import static utilities.Utilities.formatTable;
+
 /**
  *
  * @author hubert
@@ -86,7 +89,7 @@ public class VolumeFinieSolver extends AbstractFiniteSolver {
         b[0] = h[0]*f.valueOf(meshh.get(0)) + (1.0/h_demie[0])*u00.get(IPoint.X);
         b[n-1] = h[n-1]*f.valueOf(meshh.get(n-1)) + (1.0/h_demie[n])*u11.get(IPoint.X);
         for(int i=1 ; i<n-1 ; i++){
-            b[i] = f.valueOf(meshh.get(i));
+            b[i] = h[i]*f.valueOf(meshh.get(i));
         }
         
         //System.out.println("valeur du vecteur b");
@@ -141,7 +144,7 @@ public class VolumeFinieSolver extends AbstractFiniteSolver {
         b[0] = h*f.valueOf(mesh.get(0)) + (inv_h)*u0.get(IPoint.X);
         b[n-1] = h*f.valueOf(mesh.get(n-1)) + (inv_h)*u1.get(IPoint.X);
         for(int i=1 ; i<n-1 ; i++){
-            b[i] = f.valueOf(mesh.get(i));
+            b[i] = h*f.valueOf(mesh.get(i));
         }
         
         //System.out.println("valeur du vecteur b");
@@ -151,6 +154,12 @@ public class VolumeFinieSolver extends AbstractFiniteSolver {
         //printMatrice(tri.getMatrice());
         //System.out.println(Utilities.formatTable(b));
         double[] u = solver1.solve(tri, b);
+        
+        //Matrix m = new Matrix(tri.getMatrice());
+        //Matrix x = new Matrix(u , u.length);
+        //Matrix mx = m.times(x);
+        
+        
         return u;
     }
 

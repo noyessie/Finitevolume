@@ -59,6 +59,7 @@ public class DefaultFunction extends AbstractFunction{
         try {
             return Double.valueOf(evaluator.evaluate(formatedExpression));
         } catch (EvaluationException ex) {
+            System.err.println(ex.getMessage() + " " + formatedExpression);
             ex.printStackTrace();
             return 0;
         }
@@ -78,7 +79,7 @@ public class DefaultFunction extends AbstractFunction{
         try {
             return Double.valueOf(evaluator.evaluate(formatedExpression));
         } catch (EvaluationException ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage() + " " + formatedExpression);
             return 0;
         }
     }

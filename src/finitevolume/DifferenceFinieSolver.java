@@ -6,11 +6,18 @@
 package finitevolume;
 
 import function.interfaces.IFunction;
-import mesh.AbstractMesh;
-import mesh.DefaultMesh;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import matrice.MatriceException;
+import matrice.TriDiagonalMatrice;
+import matrice.solver.TriDiagMatriceSolver;
 import mesh.Dim1Mesh;
 import mesh.nterfaces.IMesh;
 import point.interfaces.IPoint;
+import utilities.Utilities;
+import static utilities.Utilities.printMatrice;
+import static utilities.Utilities.formatTable;
+
 
 /**
  *
@@ -18,71 +25,14 @@ import point.interfaces.IPoint;
  */
 public class DifferenceFinieSolver extends AbstractFiniteSolver {
 
-    private void copy(double[] tab, double[] tab2, int n) {
-        for (int i = 0; i < n; i++) {
-            tab[i] = tab2[i];
-        }
-    }
-
-    private void init(double[] tab) {
-        for (int i = 0; i < tab.length; i++) {
-            tab[i] = 0.0000000000;
-        }
-    }
-
-    private double pash(double[] mesh) {
-        double h = 0;
-        double va;
-        int n = mesh.length;
-        va = 0.0;
-        for (int i = 0; i < n - 1; i++) {
-            va = mesh[i + 1] - mesh[i];
-            if (h <= va) {
-                h = va;
-            }
-        }
-        return h;
-    }
-
-    private double[] meshTable(double pas) {
-        int j = 0;
-        double[] mesh = {};
-        if (0 < pas && pas < 0.5) {
-            double jl = pas;
-            while (jl < 1) {
-                j++;
-                jl = (double) pas * (j);
-            }
-
-            mesh = new double[j - 1];
-            jl = pas;
-            int i = 0;
-            while (i < j - 1) {
-                jl = (double) pas * (i + 1);
-                mesh[i] = (double) jl;
-                jl = pas * (i + 1);
-                System.out.println(i + " " + "jl " + jl + " mesh[i]" + mesh[i]);
-                i++;
-
-            }
-        } else {
-            System.out.println(" Entrer un pas entre 0 et 0.5 ");
-        }
-        return mesh;
-    }
-
+    
         // @Override
         @Override
         public double[] solve(IFunction f, IPoint pu0, IPoint pu1, int n) {
             double u0 = pu0.get(IPoint.X);
-            double u1 = pu1.get(IPoint.Y);
+            double u1 = pu1.get(IPoint.X);
             double pas ; double[] mesh={}; double[] u ={};
             if( 1<n){
-                pas =(double)1/n;
-                mesh = meshTable(pas);
-                
-                
-                
                 u = solve(f,pu0,pu1,new Dim1Mesh(n));
             }else{
                 System.out.println("Entez un nombre de points supérieur à 1");
@@ -91,50 +41,68 @@ public class DifferenceFinieSolver extends AbstractFiniteSolver {
         }
 
         @Override
-        public double[] solve (IFunction f, IPoint pu0, IPoint pu1, IMesh mmesh){
+        public double[] solve (IFunction f, IPoint pu0, IPoint pu1, IMesh meshh){
                // calcul des images de la fonction f par x
-            double u0 = pu0.get(IPoint.X);
-            double u1 = pu1.get(IPoint.X);
-            double mesh[] = new double[mmesh.getMesh().length];
-            for(int i=0 ; i<mesh.length ; i++){
-                mesh[i] = mmesh.get(i).get(IPoint.X);
+            //on calcul les h(i+1/2)
+            int n = meshh.getNumberOfPoint();
+            double h_demie[] = new double[n+1];
+            h_demie[0] = meshh.get(0).get(IPoint.X);
+            h_demie[n] = 1 - meshh.get(n-1).get(IPoint.X);
+            double h=0;
+            for(int i=1 ; i<n ; i++){
+                h_demie[i] = meshh.get(i).get(IPoint.X) - meshh.get(i-1).get(IPoint.X);
+                h = h_demie[i] > h ? h_demie[i]:h;
             }
-        int n;
-            n = mesh.length;
-            double pas;
-            pas = pash(mesh);
-            //pas = mesh[0];
-            double pas2 = pas * pas;
-            double[] fun;
-            fun = new double[n];
-            double c = pas2 / 2;
-            int max = 10000;
-            double c2 = 1 / pas2;
-            for (int i = 0; i < n; i++) {
-                fun[i] = f.valueOf(mesh[i]);
+            double inv_h = 1.0/h;
+            double inv_h_carre = 1.0 / (h*h);
+            
+            /*double rho[] = new double[n];
+            for(int i=0 ; i<rho.length ; i++){
+                rho[i] = ( ( h_demie[i+1] - h_demie[i] ) / ( h_demie[i+1] + h_demie[i] )  );
             }
-            // definition du vecteur pour la resolution du système
-            fun[0] = fun[0] + u0 / pas2;
-            fun[n - 1] = fun[n - 1] + u1 / pas2;
-            // résolution par la methode de gauss siedel
-            double[] u;
-            u = new double[n];
-            double[] pres;
-            pres = new double[n];
-            init(pres);
-            init(u);
-
-            for (int k = 0; k <= max; k++) {
-                u[0] = (fun[0] + pres[1] * c2) * c;
-                for (int t = 1; t <= n - 2; t++) {
-                    u[t] = (fun[t] + u[t - 1] * c2 + pres[t + 1] * c2) * c;
-                }
-                u[n - 1] = c * (fun[n - 1] + pres[n - 2] * c2);
-                copy(pres, u, n);
-            }
-
-            return u;
-
+            
+        */    
+       //construction de la matrice diagonal A
+       TriDiagonalMatrice tri = new TriDiagonalMatrice(n);
+        double[] diagInf = new double[n-1];
+        double[] diag = new double[n];
+        double[] diagSup = new double[n-1];
+        for(int i=0 ; i<n ; i++){
+            diag[i] = 2.0*inv_h_carre;
+        }
+        
+        for(int i= 0 ; i<diagInf.length ; i++)
+        {
+            diagInf[i] = -inv_h_carre;
+            diagSup[i] = -inv_h_carre;
+        }        
+        
+        try {
+            //ajout des diagonals à la matrice
+            tri.setDiagonal(diag);
+            tri.setDiagonalInferieur(diagInf);
+            tri.setDiagonalSuperieur(diagSup);
+        } catch (MatriceException ex) {
+            Logger.getLogger(VolumeFinieSolver.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        //creation du vecteur b
+        double b[] = new double[n];
+        
+        b[0] = f.valueOf(meshh.get(0).get(IPoint.X)) + inv_h_carre * pu0.get(IPoint.X);
+        b[n-1] =f.valueOf(meshh.get(n-1).get(IPoint.X)) + inv_h_carre * pu1.get(IPoint.X);
+        for(int i=1 ; i<n-1 ; i++){
+            b[i] = f.valueOf(meshh.get(i));
+        }
+        
+        //printMatrice(tri.getMatrice());
+        //System.out.println(Utilities.formatTable(b));
+        
+        //System.out.println("valeur du vecteur b");
+        //System.out.println(formatTable(b));
+        TriDiagMatriceSolver solver = new TriDiagMatriceSolver();
+        double[] u = solver.solve(tri, b);
+        return u;
         }
 
     }

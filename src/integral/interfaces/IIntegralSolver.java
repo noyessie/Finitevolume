@@ -3,19 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package integral.interfaces;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import function.interfaces.IFunction;
 
 /**
  *
- * @author hubert
+ * @author KevinJio
  */
-
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-    
-})
-public class JUnitTestRunner {
-
+public interface IIntegralSolver {
+    public double integral(IFunction f , double a , double b);
 }

@@ -5,6 +5,7 @@
  */
 package point;
 
+import java.util.Arrays;
 import point.interfaces.IPoint;
 
 /**
@@ -51,6 +52,30 @@ public class AbstractPoint implements IPoint{
         chaine += "]";
         return chaine;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + Arrays.hashCode(this.point);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AbstractPoint other = (AbstractPoint) obj;
+        if (!Arrays.equals(this.point, other.point)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     
     
