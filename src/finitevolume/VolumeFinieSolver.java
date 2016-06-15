@@ -18,6 +18,7 @@ import mesh.nterfaces.IMesh;
 import point.interfaces.IPoint;
 import utilities.Utilities;
 import static utilities.Utilities.printMatrice;
+import static finitevolume.Utility.*;
 
 import Jama.Matrix;
 import static utilities.Utilities.formatTable;
@@ -38,24 +39,10 @@ public class VolumeFinieSolver extends AbstractFiniteSolver {
         //determination des pas en fonction du maillage
        
         //on calcul les h(i)
-        double h[] = new double[n];
-        if(n == 1){
-            h[0] = 0.5;
-        }else{
-            h[0] = 0.5 * (meshh.get(1).get(IPoint.X));
-            h[n-1] = 0.5 * ( 1- meshh.get(1).get(IPoint.X) );
-            for(int i=1 ; i<n-1 ; i++){
-                h[i] = 0.5 * (meshh.get(i+1).get(IPoint.X) - meshh.get(i-1).get(IPoint.X));
-            }
-        }
+        double h[] = get_h(meshh);
          
        //on calcul les h(i+1/2)
-       double h_demie[] = new double[n+1];
-       h_demie[0] = meshh.get(0).get(IPoint.X);
-       h_demie[n] = 1 - meshh.get(n-1).get(IPoint.X);
-       for(int i=1 ; i<n ; i++){
-           h_demie[i] = meshh.get(i).get(IPoint.X) - meshh.get(i-1).get(IPoint.X);
-       }
+       double h_demie[] = get_h_demie(meshh);
         
        
        //construction de la matrice diagonal A
@@ -148,10 +135,10 @@ public class VolumeFinieSolver extends AbstractFiniteSolver {
         }
         
         //System.out.println("valeur du vecteur b");
-        //System.out.println(formatTable(b));
+        System.out.println(formatTable(b));
         TriDiagMatriceSolver solver = new TriDiagMatriceSolver();
         IMatriceSolver solver1 = new GausEidelSolver();
-        //printMatrice(tri.getMatrice());
+        printMatrice(tri.getMatrice());
         //System.out.println(Utilities.formatTable(b));
         double[] u = solver1.solve(tri, b);
         

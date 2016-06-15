@@ -12,14 +12,9 @@ import matrice.solver.AbstractMatriceSolver;
  *
  * @author KevinJio
  */
-public class Gaus extends AbstractMatriceSolver{
+public class Gaus{
     
     double[] solution;
-    
 
-    @Override
-    public double[] solve(IMatrice mat, double[] b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

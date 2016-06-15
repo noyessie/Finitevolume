@@ -7,14 +7,19 @@
 package test;
 
 import finitevolume.DifferenceFinieSolver;
+import finitevolume.EllipticvolumeFiniesolver;
+import finitevolume.VolumeFinieSolver;
 import finitevolume.error.EuclidienError;
 import finitevolume.error.InfiniteError;
 import finitevolume.error.interfaces.IErreur;
 import finitevolume.interfaces.IFiniteSolver;
+import function.DefaultFunction;
 import function.FunctionByPoint;
+import function.interfaces.IFunction;
 import gui.Plotter1D;
 import gui.plot.Graph;
 import java.awt.Color;
+import mesh.Dim1Mesh;
 import point.interfaces.IPoint;
 import test.executor.AbstractTestExecutor;
 import test.executor.DefaultTestExecutor;
@@ -39,7 +44,11 @@ public class Test {
         
         
         System.out.println("\n\n\n################### METHODE DES VOLUMES FINIES ########################\n\n\n");
-        //executeTest(tf, new VolumeFinieSolver());
+        executeTest(tf, new VolumeFinieSolver());
+        
+        System.out.println("\n\n\n################### METHODE DES VOLUMES FINIES ELLIPTIQUE ########################\n\n\n");
+        IFunction f = new DefaultFunction("1"); 
+        executeTest(tf, new EllipticvolumeFiniesolver(f, 0 , 1));
       
         
 
@@ -52,7 +61,7 @@ public class Test {
         for (TestFormater tf1 : tf) {
             boolean sol = te.execute(tf1);
             if (sol) {
-                System.out.println("\n\n\n");
+                //System.out.println("\n\n\n");
                 writeText(tf1, te.getExpectedResult(), te.getResult());
                 //System.out.println("erreur " + erreur.erreur(te.getExpectedResult(), te.getResult()));
             } else {

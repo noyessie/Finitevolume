@@ -30,9 +30,9 @@ public class DefaultFunction extends AbstractFunction{
     }
     
     private void init(){
-        varName.put(IPoint.X, "x");
-        varName.put(IPoint.Y, "y");
-        varName.put(IPoint.Z, "z");
+        varName.put(IPoint.X, "_x_");
+        varName.put(IPoint.Y, "_y_");
+        varName.put(IPoint.Z, "_z_");
         
 
         //System.out.println("   " + varName.get(IPoint.X));
